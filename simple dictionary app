@@ -1,0 +1,47 @@
+import requests
+
+# User input
+value = input("Enter Word ")
+
+# url/api to fetch results
+url = 'https://api.dictionaryapi.dev/api/v1/entries/en/' + value
+
+# sending GET request 
+r = requests.get(url)
+
+# extracting data in json format 
+result = r.json()
+print('\n' "*************************************" )
+
+# Try / evalute : results found
+try:
+  data = result[0]
+  print('Results for :'+ ' ' +  data['word'])
+  print("-------------------------------------")
+  print('Meaning')
+  # getting all meanings with Part of speech
+  for means in data['meaning']:
+    print('\u0332'.join(means) + ' : ' + data['meaning'][means][0]['definition']+ '\n')
+    
+    # getting all examples 
+    if 'example' in  data['meaning'][means][0]:
+      print('Example : ' + data['meaning'][means][0]['example'] + '\n')
+
+    # getting all synonyms
+    if 'synonyms' in  data['meaning'][means][0]:
+      print('Synonyms :')
+      for synonyms in data['meaning'][means][0]['synonyms']:
+        print(' ' + synonyms + ',' )
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+
+  print("-------------------------------------")
+  print('Origin : ' + '\n' + data['origin'])
+
+  # if resoults not found !
+except Exception:
+  data = result
+  print(value, data['title'])
+  print(data['message'])
+
+
+print("*************************************" '\n')
